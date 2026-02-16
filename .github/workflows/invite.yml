@@ -6,19 +6,24 @@ on:
 jobs:
   invite:
     runs-on: ubuntu-latest
-    # Der Bot reagiert nur, wenn "invite" im Titel steht
+    # Reagiert nur, wenn "invite" im Titel steht
     if: contains(github.event.issue.title, 'invite')
     steps:
       - name: Send Organization Invitation
-        uses: sushichop/action-repository-membership@v1
-        with:
-          token: ${{ secrets.INVITER_TOKEN }}
-          organization: Java-Datengrab26
-          username: ${{ github.event.issue.user.login }}
-          role: member
+        env:
+          GH_TOKEN: ${{ secrets.INVITER_TOKEN }}
+        run: |
+          # Sendet die Einladung direkt über die GitHub API
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /orgs/Java-Datengrab26/invitations \
+            -f "invitee_id=${{ github.event.issue.user.id }}" \
+            -f "role=direct_member"
 
       - name: Close Issue
-        run: |
-          gh issue close ${{ github.event.issue.number }} --comment "Du wurdest eingeladen! Bitte prüfe deine E-Mails oder deine GitHub-Benachrichtigungen, um die Einladung anzunehmen."
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue close ${{ github.event.issue.number }} --comment "Einladung wurde verschickt! Schau in dein Postfach oder unter https://github.com/orgs/Java-Datengrab26/invitations"
