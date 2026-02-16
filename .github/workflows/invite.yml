@@ -6,19 +6,19 @@ on:
 jobs:
   invite:
     runs-on: ubuntu-latest
-    # Der Bot reagiert nur, wenn das Issue "invite" im Titel hat
+    # Der Bot reagiert nur, wenn "invite" im Titel steht
     if: contains(github.event.issue.title, 'invite')
     steps:
       - name: Send Organization Invitation
         uses: sushichop/action-repository-membership@v1
         with:
           token: ${{ secrets.INVITER_TOKEN }}
-          organization: DEIN_ORGA_NAME  # <--- Hier den Namen deiner Orga eintragen!
+          organization: Java-Datengrab26
           username: ${{ github.event.issue.user.login }}
           role: member
 
       - name: Close Issue
-        uses: peter-evans/close-issue@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          comment: "Einladung wurde verschickt! Prüfe deine E-Mails oder deine GitHub-Benachrichtigungen."
+        run: |
+          gh issue close ${{ github.event.issue.number }} --comment "Du wurdest eingeladen! Bitte prüfe deine E-Mails oder deine GitHub-Benachrichtigungen, um die Einladung anzunehmen."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
