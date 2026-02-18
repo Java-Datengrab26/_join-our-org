@@ -47,7 +47,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: '✅ Einladung ist raus! Bitte prüfe deine E-Mails oder schau hier: https://github.com/orgs/Java-Datengrab26/invitations'
+              body: '✅ Einladung ist raus! Bitte prüfe deine E-Mails'
             });
 
             // 2. Issue schließen
